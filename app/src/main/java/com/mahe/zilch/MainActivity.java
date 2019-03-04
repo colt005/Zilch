@@ -1,8 +1,11 @@
 package com.mahe.zilch;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Constraints;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,8 +26,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     TextView tvTimer;
     MyCountDownTimer myCountDownTimer;
-    private static final long NUMBER_MILLIS = 20000;
-    private static final String MILLISECONDS_FORMAT = "%03d";
+    private static final long NUMBER_MILLIS = 5000;
+    private static final String MILLISECONDS_FORMAT = "%02d";
     private int secondsLeft = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,15 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 myCountDownTimer = new MyCountDownTimer(NUMBER_MILLIS,1);
                 myCountDownTimer.start();
+            }
+        });
+        ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.frag);
+        constraintLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                myCountDownTimer.cancel();
+
+                return false;
             }
         });
 
