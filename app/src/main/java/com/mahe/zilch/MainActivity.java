@@ -17,10 +17,15 @@ import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.concurrent.TimeUnit;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     TextView tvTimer;
     MyCountDownTimer myCountDownTimer;
+    private static final long NUMBER_MILLIS = 20000;
+    private static final String MILLISECONDS_FORMAT = "%03d";
+    private int secondsLeft = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         btntrial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myCountDownTimer = new MyCountDownTimer(10000,1000);
+                myCountDownTimer = new MyCountDownTimer(NUMBER_MILLIS,1);
                 myCountDownTimer.start();
             }
         });
@@ -80,15 +85,37 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public void onTick(long millisUntilFinished) {
-            tvTimer = (TextView) findViewById(R.id.tvTimer);
-            int progress = (int) (millisUntilFinished/1000);
+           tvTimer = (TextView) findViewById(R.id.tvTimer);
+//            int progress = (int) (millisUntilFinished/1000);
+//            long ms = millisUntilFinished;
+//            String text = String.format("%02d\' %02d\"",
+//                    TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms)),
+//                    TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms)));
+//            tvTimer.setText(text);
+            if (Math.round((float)millisUntilFinished / 1000.0f) != secondsLeft)
+            {
+                secondsLeft = Math.round((float)millisUntilFinished / 1000.0f);
+            }
+            long roundMillis = secondsLeft * 1000;
+            if(roundMillis==NUMBER_MILLIS){
+                tvTimer.setText(secondsLeft
+                        + "." + String.format(MILLISECONDS_FORMAT, 0));
+            }else {
+                tvTimer.setText(secondsLeft
+                        + "." + String.format(MILLISECONDS_FORMAT,millisUntilFinished % 1000 ));
+            }
 
-            tvTimer.setText(String.valueOf(progress));
+
+
+
+//
+//            tvTimer.setText(String.valueOf(progress));
+
         }
 
         @Override
         public void onFinish() {
-            finish();
+            tvTimer.setText("Done!");
         }
     }
 
